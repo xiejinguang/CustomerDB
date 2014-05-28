@@ -36,6 +36,8 @@ public class TestView {
     public void setUrl(String url) {
         this.url = url;
     }
+    public void queueEvent(){ 
+    }
 
     
 }
