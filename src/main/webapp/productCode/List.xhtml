@@ -19,53 +19,85 @@
         <ui:define name="body">
             <h:form id="ProductCodeListForm">
                 <p:panel header="#{bundle.ListProductCodeTitle}">
+                    <p:fieldset id="searchField" legend="${bundle.SearchConsTitle}" toggleable="true" toggleSpeed="500" >
+                        <p:panelGrid   style="width:100%"  >
+                            <p:row>
+                                <p:column >
+                                    <p:panelGrid id="searchConsGrid" columns="4">
+
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.ProductCodeLabel_prodCode}" for="prodCode" />
+                                            <p:inputText id="prodCode" value="#{productCodeController.searchCons['prodCode']}" title="#{bundle.ProductCodeTitle_prodCode}"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.ProductCodeLabel_discountCode}" for="discountCode" />
+                                            <p:inputText id="discountCode" value="#{productCodeController.searchCons['discountCode']}" title="#{bundle.ProductCodeTitle_discountCode}"  converter="javax.faces.Character"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.ProductCodeLabel_description}" for="description" />
+                                            <p:inputText id="description" value="#{productCodeController.searchCons['description']}" title="#{bundle.ProductCodeTitle_description}"  />
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton id="searchButton" icon="ui-icon-search"   value="${bundle.Search}" actionListener="#{productCodeController.searchItems}" update=":growl,datalist"/>
+                                    <br/>
+                                    <p:commandButton id="searchAllButton" icon="ui-icon-search"   value="${bundle.SearchAll}" actionListener="#{productCodeController.allItems}" update=":growl,datalist"/>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>                   
+                    </p:fieldset>
+
                     <p:dataTable id="datalist" value="#{productCodeController.items}" var="item"
-                                 selectionMode="single" selection="#{productCodeController.selected}"
+                                 selection="#{productCodeController.selectedItems}"
                                  rowKey="#{item.prodCode}"
                                  rowsPerPageTemplate="10,20,30,40,50"
                                  paginator="true" paginatorPosition="bottom"
-                                 rows="10" lazy="true" 
+                                 rows="10" 
                                  draggableColumns="true" resizableColumns="true" 
                                  scrollable="true"   liveResize="true" liveScroll="true"
                                  sortMode="multiple"
-                                 editable="true"                               
+                                 editable="true" 
+                                 stickyHeader="false" 
                                  >
 
                         <p:ajax event="rowSelect"   update="createButton,viewButton,editButton,deleteButton"/>
                         <p:ajax event="rowUnselect" update="createButton,viewButton editButton,deleteButton"/>
 
-                        <p:column>
+                        <p:column selectionMode="multiple" style="width:15px;text-align:center" toggleable="false"/>  
+
+                        <p:column sortBy="#{item.prodCode}" filterBy="#{item.prodCode}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListProductCodeTitle_prodCode}"/>
+                                <h:outputText value="#{bundle.ProductCodeTitle_prodCode}"/>
                             </f:facet>
                             <h:outputText value="#{item.prodCode}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.discountCode}" filterBy="#{item.discountCode}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListProductCodeTitle_discountCode}"/>
+                                <h:outputText value="#{bundle.ProductCodeTitle_discountCode}"/>
                             </f:facet>
                             <h:outputText value="#{item.discountCode}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.description}" filterBy="#{item.description}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListProductCodeTitle_description}"/>
+                                <h:outputText value="#{bundle.ProductCodeTitle_description}"/>
                             </f:facet>
                             <h:outputText value="#{item.description}"/>
                         </p:column>
                         <f:facet name="footer">
                             <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{productCodeController.prepareCreate}" update="@form:@parent:ProductCodeCreateForm" oncomplete="PF('ProductCodeCreateDialog').show()"/>
-                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update="@form:@parent:ProductCodeViewForm" oncomplete="PF('ProductCodeViewDialog').show()" disabled="#{empty productCodeController.selected}"/>
-                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update="@form:@parent:ProductCodeEditForm" oncomplete="PF('ProductCodeEditDialog').show()" disabled="#{empty productCodeController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{productCodeController.destroy}" update=":growl,datalist" disabled="#{empty productCodeController.selected}"/>
+                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update="@form:@parent:ProductCodeViewForm" oncomplete="PF('ProductCodeViewDialog').show()" disabled="#{empty productCodeController.selectedItems}"/>
+                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update="@form:@parent:ProductCodeEditForm" oncomplete="PF('ProductCodeEditDialog').show()" disabled="#{empty productCodeController.selectedItems}"/>
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{productCodeController.destroy}" update=":growl,datalist" disabled="#{empty productCodeController.selectedItems}"/>
+                            <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                            <p:columnToggler datasource="datalist" trigger="toggler" />
                         </f:facet>
                     </p:dataTable>
                 </p:panel>
             </h:form>
-
             <ui:include src="Create.xhtml"/>
             <ui:include src="Edit.xhtml"/>
             <ui:include src="View.xhtml"/>
         </ui:define>
     </ui:composition>
-
 </html>

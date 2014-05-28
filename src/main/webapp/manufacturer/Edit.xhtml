@@ -10,41 +10,61 @@
       xmlns:p="http://primefaces.org/ui">
 
     <ui:composition>
-
-        <p:dialog id="ManufacturerEditDlg" widgetVar="ManufacturerEditDialog" modal="true" dynamic="true"
-                  minimizable="true" draggable="true" closable="true" resizable="false" appendTo="@(body)"
+        <p:dialog id="ManufacturerEditDlg" widgetVar="ManufacturerEditDialog" modal="true" dynamic="true" fitViewport="true" minHeight="450" minWidth="600"   position="center"
+                  maximizable="true" minimizable="false" draggable="true" closable="true" resizable="true" appendTo="@(body)" closeOnEscape="true" showEffect="explode"
+                  onShow="fitViewport()" 
                   header="#{bundle.EditManufacturerTitle}">
             <h:form id="ManufacturerEditForm">
-                <h:panelGroup id="display">
-                    <p:panelGrid columns="4" rendered="#{manufacturerController.selected != null}">
-                        <p:outputLabel value="#{bundle.EditManufacturerLabel_manufacturerId}" for="manufacturerId" />
-                        <p:inputText id="manufacturerId" value="#{manufacturerController.selected.manufacturerId}" title="#{bundle.EditManufacturerTitle_manufacturerId}" required="true" requiredMessage="#{bundle.EditManufacturerRequiredMessage_manufacturerId}"/>
-                        <p:outputLabel value="#{bundle.EditManufacturerLabel_name}" for="name" />
-                        <p:inputText id="name" value="#{manufacturerController.selected.name}" title="#{bundle.EditManufacturerTitle_name}" />
-                        <p:outputLabel value="#{bundle.EditManufacturerLabel_addressline1}" for="addressline1" />
-                        <p:inputText id="addressline1" value="#{manufacturerController.selected.addressline1}" title="#{bundle.EditManufacturerTitle_addressline1}" />
-                        <p:outputLabel value="#{bundle.EditManufacturerLabel_addressline2}" for="addressline2" />
-                        <p:inputText id="addressline2" value="#{manufacturerController.selected.addressline2}" title="#{bundle.EditManufacturerTitle_addressline2}" />
-                        <p:outputLabel value="#{bundle.EditManufacturerLabel_city}" for="city" />
-                        <p:inputText id="city" value="#{manufacturerController.selected.city}" title="#{bundle.EditManufacturerTitle_city}" />
-                        <p:outputLabel value="#{bundle.EditManufacturerLabel_state}" for="state" />
-                        <p:inputText id="state" value="#{manufacturerController.selected.state}" title="#{bundle.EditManufacturerTitle_state}" />
-                        <p:outputLabel value="#{bundle.EditManufacturerLabel_zip}" for="zip" />
-                        <p:inputText id="zip" value="#{manufacturerController.selected.zip}" title="#{bundle.EditManufacturerTitle_zip}" />
-                        <p:outputLabel value="#{bundle.EditManufacturerLabel_phone}" for="phone" />
-                        <p:inputText id="phone" value="#{manufacturerController.selected.phone}" title="#{bundle.EditManufacturerTitle_phone}" />
-                        <p:outputLabel value="#{bundle.EditManufacturerLabel_fax}" for="fax" />
-                        <p:inputText id="fax" value="#{manufacturerController.selected.fax}" title="#{bundle.EditManufacturerTitle_fax}" />
-                        <p:outputLabel value="#{bundle.EditManufacturerLabel_email}" for="email" />
-                        <p:inputText id="email" value="#{manufacturerController.selected.email}" title="#{bundle.EditManufacturerTitle_email}" />
-                        <p:outputLabel value="#{bundle.EditManufacturerLabel_rep}" for="rep" />
-                        <p:inputText id="rep" value="#{manufacturerController.selected.rep}" title="#{bundle.EditManufacturerTitle_rep}" />
-                    </p:panelGrid>
-                    <p:commandButton actionListener="#{manufacturerController.Edit}" value="#{bundle.Save}" update="display,@form:@parent:ManufacturerListForm:datalist,:growl" oncomplete="handleSubmit(args,'ManufacturerEditDialog');"/>
-                    <p:commandButton type="button" value="#{bundle.Cancel}" onclick="ManufacturerEditDialog.hide()"/>
+                <h:panelGroup id="display" rendered="#{empty manufacturerController.selectedItems != null}">
+                    <ui:repeat  value="#{manufacturerController.selectedItems}" var="item">
+                        <p:panel toggleable="true" >
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ManufacturerEntityLabel}"/>
+                                <h:outputText value="#{item.manufacturerId}" title="#{bundle.ManufacturerEntityTitle}"/>
+                            </f:facet>
+                            <p:panelGrid columns="4" >
+                                <p:outputLabel value="#{bundle.EditManufacturerLabel_manufacturerId}" for="manufacturerId" />
+                                <p:inputText id="manufacturerId" value="#{item.manufacturerId}" title="#{bundle.EditManufacturerTitle_manufacturerId}" required="true" requiredMessage="#{bundle.EditManufacturerRequiredMessage_manufacturerId}"/>
+                                <p:outputLabel value="#{bundle.EditManufacturerLabel_name}" for="name" />
+                                <p:inputText id="name" value="#{item.name}" title="#{bundle.EditManufacturerTitle_name}" />
+                                <p:outputLabel value="#{bundle.EditManufacturerLabel_addressline1}" for="addressline1" />
+                                <p:inputText id="addressline1" value="#{item.addressline1}" title="#{bundle.EditManufacturerTitle_addressline1}" />
+                                <p:outputLabel value="#{bundle.EditManufacturerLabel_addressline2}" for="addressline2" />
+                                <p:inputText id="addressline2" value="#{item.addressline2}" title="#{bundle.EditManufacturerTitle_addressline2}" />
+                                <p:outputLabel value="#{bundle.EditManufacturerLabel_city}" for="city" />
+                                <p:inputText id="city" value="#{item.city}" title="#{bundle.EditManufacturerTitle_city}" />
+                                <p:outputLabel value="#{bundle.EditManufacturerLabel_state}" for="state" />
+                                <p:inputText id="state" value="#{item.state}" title="#{bundle.EditManufacturerTitle_state}" />
+                                <p:outputLabel value="#{bundle.EditManufacturerLabel_zip}" for="zip" />
+                                <p:inputText id="zip" value="#{item.zip}" title="#{bundle.EditManufacturerTitle_zip}" />
+                                <p:outputLabel value="#{bundle.EditManufacturerLabel_phone}" for="phone" />
+                                <p:inputText id="phone" value="#{item.phone}" title="#{bundle.EditManufacturerTitle_phone}" />
+                                <p:outputLabel value="#{bundle.EditManufacturerLabel_fax}" for="fax" />
+                                <p:inputText id="fax" value="#{item.fax}" title="#{bundle.EditManufacturerTitle_fax}" />
+                                <p:outputLabel value="#{bundle.EditManufacturerLabel_email}" for="email" />
+                                <p:inputText id="email" value="#{item.email}" title="#{bundle.EditManufacturerTitle_email}" />
+                                <p:outputLabel value="#{bundle.EditManufacturerLabel_rep}" for="rep" />
+                                <p:inputText id="rep" value="#{item.rep}" title="#{bundle.EditManufacturerTitle_rep}" />
+                            </p:panelGrid>
+                        </p:panel>
+                    </ui:repeat>
+                    <p:commandButton actionListener="#{manufacturerController.update}" value="#{bundle.Save}" update="display,@form:@parent:ManufacturerListForm:datalist,:growl" oncomplete="handleSubmit(args,'ManufacturerEditDialog');"/>
+                    <p:commandButton type="button" value="#{bundle.Cancel}" onclick="PF('ManufacturerEditDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
 
     </ui:composition>
+    <script type="text/javascript">
+
+        function fitViewport() {
+            var source = $('#ManufacturerEditDlg');
+            var content = source.children('.ui-dialog-content');
+            source.height(Math.min($(window).height(), content.height() + 50));
+            content.height(Math.min($(window).height() - 50, content.height()));
+
+        }
+
+
+    </script>
 </html>

@@ -19,47 +19,75 @@
         <ui:define name="body">
             <h:form id="DiscountCodeListForm">
                 <p:panel header="#{bundle.ListDiscountCodeTitle}">
+                    <p:fieldset id="searchField" legend="${bundle.SearchConsTitle}" toggleable="true" toggleSpeed="500" >
+                        <p:panelGrid   style="width:100%"  >
+                            <p:row>
+                                <p:column >
+                                    <p:panelGrid id="searchConsGrid" columns="4">
+
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.DiscountCodeLabel_discountCode}" for="discountCode" />
+                                            <p:inputText id="discountCode" value="#{discountCodeController.searchCons['discountCode']}" title="#{bundle.DiscountCodeTitle_discountCode}"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.DiscountCodeLabel_rate}" for="rate" />
+                                            <p:inputText id="rate" value="#{discountCodeController.searchCons['rate']}" title="#{bundle.DiscountCodeTitle_rate}"  converter="javax.faces.BigDecimal"  />
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton id="searchButton" icon="ui-icon-search"   value="${bundle.Search}" actionListener="#{discountCodeController.searchItems}" update=":growl,datalist"/>
+                                    <br/>
+                                    <p:commandButton id="searchAllButton" icon="ui-icon-search"   value="${bundle.SearchAll}" actionListener="#{discountCodeController.allItems}" update=":growl,datalist"/>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>                   
+                    </p:fieldset>
+
                     <p:dataTable id="datalist" value="#{discountCodeController.items}" var="item"
-                                 selectionMode="single" selection="#{discountCodeController.selected}"
+                                 selection="#{discountCodeController.selectedItems}"
                                  rowKey="#{item.discountCode}"
                                  rowsPerPageTemplate="10,20,30,40,50"
                                  paginator="true" paginatorPosition="bottom"
-                                 rows="10" lazy="true" 
+                                 rows="10" 
                                  draggableColumns="true" resizableColumns="true" 
                                  scrollable="true"   liveResize="true" liveScroll="true"
                                  sortMode="multiple"
-                                 editable="true"                               
+                                 editable="true" 
+                                 stickyHeader="false" 
                                  >
 
                         <p:ajax event="rowSelect"   update="createButton,viewButton,editButton,deleteButton"/>
                         <p:ajax event="rowUnselect" update="createButton,viewButton editButton,deleteButton"/>
 
-                        <p:column>
+                        <p:column selectionMode="multiple" style="width:15px;text-align:center" toggleable="false"/>  
+
+                        <p:column sortBy="#{item.discountCode}" filterBy="#{item.discountCode}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListDiscountCodeTitle_discountCode}"/>
+                                <h:outputText value="#{bundle.DiscountCodeTitle_discountCode}"/>
                             </f:facet>
                             <h:outputText value="#{item.discountCode}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.rate}" filterBy="#{item.rate}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListDiscountCodeTitle_rate}"/>
+                                <h:outputText value="#{bundle.DiscountCodeTitle_rate}"/>
                             </f:facet>
                             <h:outputText value="#{item.rate}"/>
                         </p:column>
                         <f:facet name="footer">
                             <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{discountCodeController.prepareCreate}" update="@form:@parent:DiscountCodeCreateForm" oncomplete="PF('DiscountCodeCreateDialog').show()"/>
-                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update="@form:@parent:DiscountCodeViewForm" oncomplete="PF('DiscountCodeViewDialog').show()" disabled="#{empty discountCodeController.selected}"/>
-                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update="@form:@parent:DiscountCodeEditForm" oncomplete="PF('DiscountCodeEditDialog').show()" disabled="#{empty discountCodeController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{discountCodeController.destroy}" update=":growl,datalist" disabled="#{empty discountCodeController.selected}"/>
+                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update="@form:@parent:DiscountCodeViewForm" oncomplete="PF('DiscountCodeViewDialog').show()" disabled="#{empty discountCodeController.selectedItems}"/>
+                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update="@form:@parent:DiscountCodeEditForm" oncomplete="PF('DiscountCodeEditDialog').show()" disabled="#{empty discountCodeController.selectedItems}"/>
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{discountCodeController.destroy}" update=":growl,datalist" disabled="#{empty discountCodeController.selectedItems}"/>
+                            <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                            <p:columnToggler datasource="datalist" trigger="toggler" />
                         </f:facet>
                     </p:dataTable>
                 </p:panel>
             </h:form>
-
             <ui:include src="Create.xhtml"/>
             <ui:include src="Edit.xhtml"/>
             <ui:include src="View.xhtml"/>
         </ui:define>
     </ui:composition>
-
 </html>

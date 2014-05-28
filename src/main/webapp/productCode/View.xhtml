@@ -7,22 +7,43 @@
       xmlns:p="http://primefaces.org/ui">
 
     <ui:composition>
-
-        <p:dialog id="ProductCodeViewDlg" widgetVar="ProductCodeViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewProductCodeTitle}">
+        <p:dialog id="ProductCodeViewDlg" widgetVar="ProductCodeViewDialog" modal="true" dynamic="true" fitViewport="true" minHeight="450" minWidth="600"   position="center"
+                  maximizable="true" minimizable="false" draggable="true" closable="true" resizable="true" appendTo="@(body)" closeOnEscape="true" showEffect="explode"
+                  onShow="fitViewport()" 
+                  header="#{bundle.ViewProductCodeTitle}">
             <h:form id="ProductCodeViewForm">
-                <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{productCodeController.selected != null}">
-                        <h:outputText value="#{bundle.ViewProductCodeLabel_prodCode}"/>
-                        <h:outputText value="#{productCodeController.selected.prodCode}" title="#{bundle.ViewProductCodeTitle_prodCode}"/>
-                        <h:outputText value="#{bundle.ViewProductCodeLabel_discountCode}"/>
-                        <h:outputText value="#{productCodeController.selected.discountCode}" title="#{bundle.ViewProductCodeTitle_discountCode}"/>
-                        <h:outputText value="#{bundle.ViewProductCodeLabel_description}"/>
-                        <h:outputText value="#{productCodeController.selected.description}" title="#{bundle.ViewProductCodeTitle_description}"/>
-                    </p:panelGrid>
-                    <p:commandButton value="#{bundle.Close}" onclick="ProductCodeViewDialog.hide()"/>
+                <h:panelGroup id="display" rendered="#{empty productCodeController.selectedItems != null}">
+                    <ui:repeat  value="#{productCodeController.selectedItems}" var="item">
+                        <p:panel toggleable="true" >
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ProductCodeEntityLabel}"/>
+                                <h:outputText value="#{item.prodCode}" title="#{bundle.ProductCodeEntityTitle}"/>
+                            </f:facet>
+                            <p:panelGrid columns="2" >
+                                <h:outputText value="#{bundle.ProductCodeLabel_prodCode}"/>
+                                <h:outputText value="#{item.prodCode}" title="#{bundle.ProductCodeTitle_prodCode}"/>
+                                <h:outputText value="#{bundle.ProductCodeLabel_discountCode}"/>
+                                <h:outputText value="#{item.discountCode}" title="#{bundle.ProductCodeTitle_discountCode}"/>
+                                <h:outputText value="#{bundle.ProductCodeLabel_description}"/>
+                                <h:outputText value="#{item.description}" title="#{bundle.ProductCodeTitle_description}"/>
+                            </p:panelGrid>
+                        </p:panel>
+                    </ui:repeat>
+                    <p:commandButton type="button" value="#{bundle.Close}" onclick="PF('ProductCodeViewDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
-
     </ui:composition>
+    <script type="text/javascript">
+
+        function fitViewport() {
+            var source = $('#ProductCodeViewDlg');
+            var content = source.children('.ui-dialog-content');
+            source.height(Math.min($(window).height(), content.height() + 50));
+            content.height(Math.min($(window).height() - 50, content.height()));
+
+        }
+
+
+    </script>
 </html>

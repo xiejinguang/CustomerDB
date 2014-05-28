@@ -19,59 +19,95 @@
         <ui:define name="body">
             <h:form id="MicroMarketListForm">
                 <p:panel header="#{bundle.ListMicroMarketTitle}">
+                    <p:fieldset id="searchField" legend="${bundle.SearchConsTitle}" toggleable="true" toggleSpeed="500" >
+                        <p:panelGrid   style="width:100%"  >
+                            <p:row>
+                                <p:column >
+                                    <p:panelGrid id="searchConsGrid" columns="4">
+
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.MicroMarketLabel_zipCode}" for="zipCode" />
+                                            <p:inputText id="zipCode" value="#{microMarketController.searchCons['zipCode']}" title="#{bundle.MicroMarketTitle_zipCode}"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.MicroMarketLabel_radius}" for="radius" />
+                                            <p:inputText id="radius" value="#{microMarketController.searchCons['radius']}" title="#{bundle.MicroMarketTitle_radius}"  converter="javax.faces.Double"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.MicroMarketLabel_areaLength}" for="areaLength" />
+                                            <p:inputText id="areaLength" value="#{microMarketController.searchCons['areaLength']}" title="#{bundle.MicroMarketTitle_areaLength}"  converter="javax.faces.Double"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.MicroMarketLabel_areaWidth}" for="areaWidth" />
+                                            <p:inputText id="areaWidth" value="#{microMarketController.searchCons['areaWidth']}" title="#{bundle.MicroMarketTitle_areaWidth}"  converter="javax.faces.Double"  />
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton id="searchButton" icon="ui-icon-search"   value="${bundle.Search}" actionListener="#{microMarketController.searchItems}" update=":growl,datalist"/>
+                                    <br/>
+                                    <p:commandButton id="searchAllButton" icon="ui-icon-search"   value="${bundle.SearchAll}" actionListener="#{microMarketController.allItems}" update=":growl,datalist"/>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>                   
+                    </p:fieldset>
+
                     <p:dataTable id="datalist" value="#{microMarketController.items}" var="item"
-                                 selectionMode="single" selection="#{microMarketController.selected}"
+                                 selection="#{microMarketController.selectedItems}"
                                  rowKey="#{item.zipCode}"
                                  rowsPerPageTemplate="10,20,30,40,50"
                                  paginator="true" paginatorPosition="bottom"
-                                 rows="10" lazy="true" 
+                                 rows="10" 
                                  draggableColumns="true" resizableColumns="true" 
                                  scrollable="true"   liveResize="true" liveScroll="true"
                                  sortMode="multiple"
-                                 editable="true"                               
+                                 editable="true" 
+                                 stickyHeader="false" 
                                  >
 
                         <p:ajax event="rowSelect"   update="createButton,viewButton,editButton,deleteButton"/>
                         <p:ajax event="rowUnselect" update="createButton,viewButton editButton,deleteButton"/>
 
-                        <p:column>
+                        <p:column selectionMode="multiple" style="width:15px;text-align:center" toggleable="false"/>  
+
+                        <p:column sortBy="#{item.zipCode}" filterBy="#{item.zipCode}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListMicroMarketTitle_zipCode}"/>
+                                <h:outputText value="#{bundle.MicroMarketTitle_zipCode}"/>
                             </f:facet>
                             <h:outputText value="#{item.zipCode}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.radius}" filterBy="#{item.radius}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListMicroMarketTitle_radius}"/>
+                                <h:outputText value="#{bundle.MicroMarketTitle_radius}"/>
                             </f:facet>
                             <h:outputText value="#{item.radius}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.areaLength}" filterBy="#{item.areaLength}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListMicroMarketTitle_areaLength}"/>
+                                <h:outputText value="#{bundle.MicroMarketTitle_areaLength}"/>
                             </f:facet>
                             <h:outputText value="#{item.areaLength}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.areaWidth}" filterBy="#{item.areaWidth}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListMicroMarketTitle_areaWidth}"/>
+                                <h:outputText value="#{bundle.MicroMarketTitle_areaWidth}"/>
                             </f:facet>
                             <h:outputText value="#{item.areaWidth}"/>
                         </p:column>
                         <f:facet name="footer">
                             <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{microMarketController.prepareCreate}" update="@form:@parent:MicroMarketCreateForm" oncomplete="PF('MicroMarketCreateDialog').show()"/>
-                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update="@form:@parent:MicroMarketViewForm" oncomplete="PF('MicroMarketViewDialog').show()" disabled="#{empty microMarketController.selected}"/>
-                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update="@form:@parent:MicroMarketEditForm" oncomplete="PF('MicroMarketEditDialog').show()" disabled="#{empty microMarketController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{microMarketController.destroy}" update=":growl,datalist" disabled="#{empty microMarketController.selected}"/>
+                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update="@form:@parent:MicroMarketViewForm" oncomplete="PF('MicroMarketViewDialog').show()" disabled="#{empty microMarketController.selectedItems}"/>
+                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update="@form:@parent:MicroMarketEditForm" oncomplete="PF('MicroMarketEditDialog').show()" disabled="#{empty microMarketController.selectedItems}"/>
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{microMarketController.destroy}" update=":growl,datalist" disabled="#{empty microMarketController.selectedItems}"/>
+                            <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                            <p:columnToggler datasource="datalist" trigger="toggler" />
                         </f:facet>
                     </p:dataTable>
                 </p:panel>
             </h:form>
-
             <ui:include src="Create.xhtml"/>
             <ui:include src="Edit.xhtml"/>
             <ui:include src="View.xhtml"/>
         </ui:define>
     </ui:composition>
-
 </html>

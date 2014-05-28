@@ -7,24 +7,45 @@
       xmlns:p="http://primefaces.org/ui">
 
     <ui:composition>
-
-        <p:dialog id="MicroMarketViewDlg" widgetVar="MicroMarketViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewMicroMarketTitle}">
+        <p:dialog id="MicroMarketViewDlg" widgetVar="MicroMarketViewDialog" modal="true" dynamic="true" fitViewport="true" minHeight="450" minWidth="600"   position="center"
+                  maximizable="true" minimizable="false" draggable="true" closable="true" resizable="true" appendTo="@(body)" closeOnEscape="true" showEffect="explode"
+                  onShow="fitViewport()" 
+                  header="#{bundle.ViewMicroMarketTitle}">
             <h:form id="MicroMarketViewForm">
-                <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{microMarketController.selected != null}">
-                        <h:outputText value="#{bundle.ViewMicroMarketLabel_zipCode}"/>
-                        <h:outputText value="#{microMarketController.selected.zipCode}" title="#{bundle.ViewMicroMarketTitle_zipCode}"/>
-                        <h:outputText value="#{bundle.ViewMicroMarketLabel_radius}"/>
-                        <h:outputText value="#{microMarketController.selected.radius}" title="#{bundle.ViewMicroMarketTitle_radius}"/>
-                        <h:outputText value="#{bundle.ViewMicroMarketLabel_areaLength}"/>
-                        <h:outputText value="#{microMarketController.selected.areaLength}" title="#{bundle.ViewMicroMarketTitle_areaLength}"/>
-                        <h:outputText value="#{bundle.ViewMicroMarketLabel_areaWidth}"/>
-                        <h:outputText value="#{microMarketController.selected.areaWidth}" title="#{bundle.ViewMicroMarketTitle_areaWidth}"/>
-                    </p:panelGrid>
-                    <p:commandButton value="#{bundle.Close}" onclick="MicroMarketViewDialog.hide()"/>
+                <h:panelGroup id="display" rendered="#{empty microMarketController.selectedItems != null}">
+                    <ui:repeat  value="#{microMarketController.selectedItems}" var="item">
+                        <p:panel toggleable="true" >
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.MicroMarketEntityLabel}"/>
+                                <h:outputText value="#{item.zipCode}" title="#{bundle.MicroMarketEntityTitle}"/>
+                            </f:facet>
+                            <p:panelGrid columns="2" >
+                                <h:outputText value="#{bundle.MicroMarketLabel_zipCode}"/>
+                                <h:outputText value="#{item.zipCode}" title="#{bundle.MicroMarketTitle_zipCode}"/>
+                                <h:outputText value="#{bundle.MicroMarketLabel_radius}"/>
+                                <h:outputText value="#{item.radius}" title="#{bundle.MicroMarketTitle_radius}"/>
+                                <h:outputText value="#{bundle.MicroMarketLabel_areaLength}"/>
+                                <h:outputText value="#{item.areaLength}" title="#{bundle.MicroMarketTitle_areaLength}"/>
+                                <h:outputText value="#{bundle.MicroMarketLabel_areaWidth}"/>
+                                <h:outputText value="#{item.areaWidth}" title="#{bundle.MicroMarketTitle_areaWidth}"/>
+                            </p:panelGrid>
+                        </p:panel>
+                    </ui:repeat>
+                    <p:commandButton type="button" value="#{bundle.Close}" onclick="PF('MicroMarketViewDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
-
     </ui:composition>
+    <script type="text/javascript">
+
+        function fitViewport() {
+            var source = $('#MicroMarketViewDlg');
+            var content = source.children('.ui-dialog-content');
+            source.height(Math.min($(window).height(), content.height() + 50));
+            content.height(Math.min($(window).height() - 50, content.height()));
+
+        }
+
+
+    </script>
 </html>

@@ -10,41 +10,53 @@
       xmlns:p="http://primefaces.org/ui">
 
     <ui:composition>
-
-        <p:dialog id="ManufacturerCreateDlg" widgetVar="ManufacturerCreateDialog" modal="true" dynamic="true"
-                  minimizable="true" draggable="true" closable="true" resizable="false" appendTo="@(body)"
+        <p:dialog id="ManufacturerCreateDlg" widgetVar="ManufacturerCreateDialog" modal="true" dynamic="true" fitViewport="true" minHeight="450" minWidth="600"   position="center"
+                  maximizable="true" minimizable="false" draggable="true" closable="true" resizable="true" appendTo="@(body)" closeOnEscape="true" showEffect="explode"
+                  onShow="fitViewport()" 
                   header="#{bundle.CreateManufacturerTitle}">
             <h:form id="ManufacturerCreateForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="4" rendered="#{manufacturerController.selected != null}">
+                    <p:panelGrid columns="4" rendered="#{manufacturerController.created != null}">
                         <p:outputLabel value="#{bundle.CreateManufacturerLabel_manufacturerId}" for="manufacturerId" />
-                        <p:inputText id="manufacturerId" value="#{manufacturerController.selected.manufacturerId}" title="#{bundle.CreateManufacturerTitle_manufacturerId}" required="true" requiredMessage="#{bundle.CreateManufacturerRequiredMessage_manufacturerId}"/>
+                        <p:inputText id="manufacturerId" value="#{manufacturerController.created.manufacturerId}" title="#{bundle.CreateManufacturerTitle_manufacturerId}" required="true" requiredMessage="#{bundle.CreateManufacturerRequiredMessage_manufacturerId}"/>
                         <p:outputLabel value="#{bundle.CreateManufacturerLabel_name}" for="name" />
-                        <p:inputText id="name" value="#{manufacturerController.selected.name}" title="#{bundle.CreateManufacturerTitle_name}" />
+                        <p:inputText id="name" value="#{manufacturerController.created.name}" title="#{bundle.CreateManufacturerTitle_name}" />
                         <p:outputLabel value="#{bundle.CreateManufacturerLabel_addressline1}" for="addressline1" />
-                        <p:inputText id="addressline1" value="#{manufacturerController.selected.addressline1}" title="#{bundle.CreateManufacturerTitle_addressline1}" />
+                        <p:inputText id="addressline1" value="#{manufacturerController.created.addressline1}" title="#{bundle.CreateManufacturerTitle_addressline1}" />
                         <p:outputLabel value="#{bundle.CreateManufacturerLabel_addressline2}" for="addressline2" />
-                        <p:inputText id="addressline2" value="#{manufacturerController.selected.addressline2}" title="#{bundle.CreateManufacturerTitle_addressline2}" />
+                        <p:inputText id="addressline2" value="#{manufacturerController.created.addressline2}" title="#{bundle.CreateManufacturerTitle_addressline2}" />
                         <p:outputLabel value="#{bundle.CreateManufacturerLabel_city}" for="city" />
-                        <p:inputText id="city" value="#{manufacturerController.selected.city}" title="#{bundle.CreateManufacturerTitle_city}" />
+                        <p:inputText id="city" value="#{manufacturerController.created.city}" title="#{bundle.CreateManufacturerTitle_city}" />
                         <p:outputLabel value="#{bundle.CreateManufacturerLabel_state}" for="state" />
-                        <p:inputText id="state" value="#{manufacturerController.selected.state}" title="#{bundle.CreateManufacturerTitle_state}" />
+                        <p:inputText id="state" value="#{manufacturerController.created.state}" title="#{bundle.CreateManufacturerTitle_state}" />
                         <p:outputLabel value="#{bundle.CreateManufacturerLabel_zip}" for="zip" />
-                        <p:inputText id="zip" value="#{manufacturerController.selected.zip}" title="#{bundle.CreateManufacturerTitle_zip}" />
+                        <p:inputText id="zip" value="#{manufacturerController.created.zip}" title="#{bundle.CreateManufacturerTitle_zip}" />
                         <p:outputLabel value="#{bundle.CreateManufacturerLabel_phone}" for="phone" />
-                        <p:inputText id="phone" value="#{manufacturerController.selected.phone}" title="#{bundle.CreateManufacturerTitle_phone}" />
+                        <p:inputText id="phone" value="#{manufacturerController.created.phone}" title="#{bundle.CreateManufacturerTitle_phone}" />
                         <p:outputLabel value="#{bundle.CreateManufacturerLabel_fax}" for="fax" />
-                        <p:inputText id="fax" value="#{manufacturerController.selected.fax}" title="#{bundle.CreateManufacturerTitle_fax}" />
+                        <p:inputText id="fax" value="#{manufacturerController.created.fax}" title="#{bundle.CreateManufacturerTitle_fax}" />
                         <p:outputLabel value="#{bundle.CreateManufacturerLabel_email}" for="email" />
-                        <p:inputText id="email" value="#{manufacturerController.selected.email}" title="#{bundle.CreateManufacturerTitle_email}" />
+                        <p:inputText id="email" value="#{manufacturerController.created.email}" title="#{bundle.CreateManufacturerTitle_email}" />
                         <p:outputLabel value="#{bundle.CreateManufacturerLabel_rep}" for="rep" />
-                        <p:inputText id="rep" value="#{manufacturerController.selected.rep}" title="#{bundle.CreateManufacturerTitle_rep}" />
+                        <p:inputText id="rep" value="#{manufacturerController.created.rep}" title="#{bundle.CreateManufacturerTitle_rep}" />
                     </p:panelGrid>
                     <p:commandButton actionListener="#{manufacturerController.create}" value="#{bundle.Save}" update="display,@form:@parent:ManufacturerListForm:datalist,:growl" oncomplete="handleSubmit(args,'ManufacturerCreateDialog');"/>
-                    <p:commandButton type="button" value="#{bundle.Cancel}" onclick="ManufacturerCreateDialog.hide()"/>
+                    <p:commandButton type="button" value="#{bundle.Cancel}" onclick="PF('ManufacturerCreateDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
 
     </ui:composition>
+    <script type="text/javascript">
+
+        function fitViewport() {
+            var source = $('#ManufacturerCreateDlg');
+            var content = source.children('.ui-dialog-content');
+            source.height(Math.min($(window).height(), content.height() + 50));
+            content.height(Math.min($(window).height() - 50, content.height()));
+
+        }
+
+
+    </script>
 </html>

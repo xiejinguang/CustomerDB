@@ -7,36 +7,57 @@
       xmlns:p="http://primefaces.org/ui">
 
     <ui:composition>
-
-        <p:dialog id="PurchaseOrderViewDlg" widgetVar="PurchaseOrderViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewPurchaseOrderTitle}">
+        <p:dialog id="PurchaseOrderViewDlg" widgetVar="PurchaseOrderViewDialog" modal="true" dynamic="true" fitViewport="true" minHeight="450" minWidth="600"   position="center"
+                  maximizable="true" minimizable="false" draggable="true" closable="true" resizable="true" appendTo="@(body)" closeOnEscape="true" showEffect="explode"
+                  onShow="fitViewport()" 
+                  header="#{bundle.ViewPurchaseOrderTitle}">
             <h:form id="PurchaseOrderViewForm">
-                <h:panelGroup id="display">
-                    <p:panelGrid columns="4" rendered="#{purchaseOrderController.selected != null}">
-                        <h:outputText value="#{bundle.ViewPurchaseOrderLabel_orderNum}"/>
-                        <h:outputText value="#{purchaseOrderController.selected.orderNum}" title="#{bundle.ViewPurchaseOrderTitle_orderNum}"/>
-                        <h:outputText value="#{bundle.ViewPurchaseOrderLabel_quantity}"/>
-                        <h:outputText value="#{purchaseOrderController.selected.quantity}" title="#{bundle.ViewPurchaseOrderTitle_quantity}"/>
-                        <h:outputText value="#{bundle.ViewPurchaseOrderLabel_shippingCost}"/>
-                        <h:outputText value="#{purchaseOrderController.selected.shippingCost}" title="#{bundle.ViewPurchaseOrderTitle_shippingCost}"/>
-                        <h:outputText value="#{bundle.ViewPurchaseOrderLabel_salesDate}"/>
-                        <h:outputText value="#{purchaseOrderController.selected.salesDate}" title="#{bundle.ViewPurchaseOrderTitle_salesDate}">
-                            <f:convertDateTime pattern="MM/dd/yyyy" />
-                        </h:outputText>
-                        <h:outputText value="#{bundle.ViewPurchaseOrderLabel_shippingDate}"/>
-                        <h:outputText value="#{purchaseOrderController.selected.shippingDate}" title="#{bundle.ViewPurchaseOrderTitle_shippingDate}">
-                            <f:convertDateTime pattern="MM/dd/yyyy" />
-                        </h:outputText>
-                        <h:outputText value="#{bundle.ViewPurchaseOrderLabel_freightCompany}"/>
-                        <h:outputText value="#{purchaseOrderController.selected.freightCompany}" title="#{bundle.ViewPurchaseOrderTitle_freightCompany}"/>
-                        <h:outputText value="#{bundle.ViewPurchaseOrderLabel_productId}"/>
-                        <h:outputText value="#{purchaseOrderController.selected.productId}" title="#{bundle.ViewPurchaseOrderTitle_productId}"/>
-                        <h:outputText value="#{bundle.ViewPurchaseOrderLabel_customerId}"/>
-                        <h:outputText value="#{purchaseOrderController.selected.customerId}" title="#{bundle.ViewPurchaseOrderTitle_customerId}"/>
-                    </p:panelGrid>
-                    <p:commandButton value="#{bundle.Close}" onclick="PurchaseOrderViewDialog.hide()"/>
+                <h:panelGroup id="display" rendered="#{empty purchaseOrderController.selectedItems != null}">
+                    <ui:repeat  value="#{purchaseOrderController.selectedItems}" var="item">
+                        <p:panel toggleable="true" >
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.PurchaseOrderEntityLabel}"/>
+                                <h:outputText value="#{item.orderNum}" title="#{bundle.PurchaseOrderEntityTitle}"/>
+                            </f:facet>
+                            <p:panelGrid columns="4" >
+                                <h:outputText value="#{bundle.PurchaseOrderLabel_orderNum}"/>
+                                <h:outputText value="#{item.orderNum}" title="#{bundle.PurchaseOrderTitle_orderNum}"/>
+                                <h:outputText value="#{bundle.PurchaseOrderLabel_quantity}"/>
+                                <h:outputText value="#{item.quantity}" title="#{bundle.PurchaseOrderTitle_quantity}"/>
+                                <h:outputText value="#{bundle.PurchaseOrderLabel_shippingCost}"/>
+                                <h:outputText value="#{item.shippingCost}" title="#{bundle.PurchaseOrderTitle_shippingCost}"/>
+                                <h:outputText value="#{bundle.PurchaseOrderLabel_salesDate}"/>
+                                <h:outputText value="#{item.salesDate}" title="#{bundle.PurchaseOrderTitle_salesDate}">
+                                    <f:convertDateTime pattern="MM/dd/yyyy" />
+                                </h:outputText>
+                                <h:outputText value="#{bundle.PurchaseOrderLabel_shippingDate}"/>
+                                <h:outputText value="#{item.shippingDate}" title="#{bundle.PurchaseOrderTitle_shippingDate}">
+                                    <f:convertDateTime pattern="MM/dd/yyyy" />
+                                </h:outputText>
+                                <h:outputText value="#{bundle.PurchaseOrderLabel_freightCompany}"/>
+                                <h:outputText value="#{item.freightCompany}" title="#{bundle.PurchaseOrderTitle_freightCompany}"/>
+                                <h:outputText value="#{bundle.PurchaseOrderLabel_productId}"/>
+                                <h:outputText value="#{item.productId}" title="#{bundle.PurchaseOrderTitle_productId}"/>
+                                <h:outputText value="#{bundle.PurchaseOrderLabel_customerId}"/>
+                                <h:outputText value="#{item.customerId}" title="#{bundle.PurchaseOrderTitle_customerId}"/>
+                            </p:panelGrid>
+                        </p:panel>
+                    </ui:repeat>
+                    <p:commandButton type="button" value="#{bundle.Close}" onclick="PF('PurchaseOrderViewDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
-
     </ui:composition>
+    <script type="text/javascript">
+
+        function fitViewport() {
+            var source = $('#PurchaseOrderViewDlg');
+            var content = source.children('.ui-dialog-content');
+            source.height(Math.min($(window).height(), content.height() + 50));
+            content.height(Math.min($(window).height() - 50, content.height()));
+
+        }
+
+
+    </script>
 </html>

@@ -19,83 +19,143 @@
         <ui:define name="body">
             <h:form id="ProductListForm">
                 <p:panel header="#{bundle.ListProductTitle}">
+                    <p:fieldset id="searchField" legend="${bundle.SearchConsTitle}" toggleable="true" toggleSpeed="500" >
+                        <p:panelGrid   style="width:100%"  >
+                            <p:row>
+                                <p:column >
+                                    <p:panelGrid id="searchConsGrid" columns="4">
+
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.ProductLabel_productId}" for="productId" />
+                                            <p:inputText id="productId" value="#{productController.searchCons['productId']}" title="#{bundle.ProductTitle_productId}"  converter="javax.faces.Integer"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.ProductLabel_purchaseCost}" for="purchaseCost" />
+                                            <p:inputText id="purchaseCost" value="#{productController.searchCons['purchaseCost']}" title="#{bundle.ProductTitle_purchaseCost}"  converter="javax.faces.BigDecimal"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.ProductLabel_quantityOnHand}" for="quantityOnHand" />
+                                            <p:inputText id="quantityOnHand" value="#{productController.searchCons['quantityOnHand']}" title="#{bundle.ProductTitle_quantityOnHand}"  converter="javax.faces.Integer"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.ProductLabel_markup}" for="markup" />
+                                            <p:inputText id="markup" value="#{productController.searchCons['markup']}" title="#{bundle.ProductTitle_markup}"  converter="javax.faces.BigDecimal"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.ProductLabel_available}" for="available" />
+                                            <p:inputText id="available" value="#{productController.searchCons['available']}" title="#{bundle.ProductTitle_available}"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.ProductLabel_description}" for="description" />
+                                            <p:inputText id="description" value="#{productController.searchCons['description']}" title="#{bundle.ProductTitle_description}"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.ProductLabel_productCode}" for="productCode" />
+                                            <p:selectOneMenu id="productCode" value="#{productController.searchCons['productCode']}" >
+                                                <f:selectItems value="#{productCodeController.itemsAvailableSelectOne}"
+                                                               var="productCodeItem"
+                                                               itemValue="#{productCodeItem}"/>
+                                            </p:selectOneMenu>
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.ProductLabel_manufacturerId}" for="manufacturerId" />
+                                            <p:selectOneMenu id="manufacturerId" value="#{productController.searchCons['manufacturerId']}" >
+                                                <f:selectItems value="#{manufacturerController.itemsAvailableSelectOne}"
+                                                               var="manufacturerIdItem"
+                                                               itemValue="#{manufacturerIdItem}"/>
+                                            </p:selectOneMenu>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton id="searchButton" icon="ui-icon-search"   value="${bundle.Search}" actionListener="#{productController.searchItems}" update=":growl,datalist"/>
+                                    <br/>
+                                    <p:commandButton id="searchAllButton" icon="ui-icon-search"   value="${bundle.SearchAll}" actionListener="#{productController.allItems}" update=":growl,datalist"/>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>                   
+                    </p:fieldset>
+
                     <p:dataTable id="datalist" value="#{productController.items}" var="item"
-                                 selectionMode="single" selection="#{productController.selected}"
+                                 selection="#{productController.selectedItems}"
                                  rowKey="#{item.productId}"
                                  rowsPerPageTemplate="10,20,30,40,50"
                                  paginator="true" paginatorPosition="bottom"
-                                 rows="10" lazy="true" 
+                                 rows="10" 
                                  draggableColumns="true" resizableColumns="true" 
                                  scrollable="true"   liveResize="true" liveScroll="true"
                                  sortMode="multiple"
-                                 editable="true"                               
+                                 editable="true" 
+                                 stickyHeader="false" 
                                  >
 
                         <p:ajax event="rowSelect"   update="createButton,viewButton,editButton,deleteButton"/>
                         <p:ajax event="rowUnselect" update="createButton,viewButton editButton,deleteButton"/>
 
-                        <p:column>
+                        <p:column selectionMode="multiple" style="width:15px;text-align:center" toggleable="false"/>  
+
+                        <p:column sortBy="#{item.productId}" filterBy="#{item.productId}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListProductTitle_productId}"/>
+                                <h:outputText value="#{bundle.ProductTitle_productId}"/>
                             </f:facet>
                             <h:outputText value="#{item.productId}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.purchaseCost}" filterBy="#{item.purchaseCost}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListProductTitle_purchaseCost}"/>
+                                <h:outputText value="#{bundle.ProductTitle_purchaseCost}"/>
                             </f:facet>
                             <h:outputText value="#{item.purchaseCost}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.quantityOnHand}" filterBy="#{item.quantityOnHand}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListProductTitle_quantityOnHand}"/>
+                                <h:outputText value="#{bundle.ProductTitle_quantityOnHand}"/>
                             </f:facet>
                             <h:outputText value="#{item.quantityOnHand}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.markup}" filterBy="#{item.markup}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListProductTitle_markup}"/>
+                                <h:outputText value="#{bundle.ProductTitle_markup}"/>
                             </f:facet>
                             <h:outputText value="#{item.markup}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.available}" filterBy="#{item.available}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListProductTitle_available}"/>
+                                <h:outputText value="#{bundle.ProductTitle_available}"/>
                             </f:facet>
                             <h:outputText value="#{item.available}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.description}" filterBy="#{item.description}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListProductTitle_description}"/>
+                                <h:outputText value="#{bundle.ProductTitle_description}"/>
                             </f:facet>
                             <h:outputText value="#{item.description}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.productCode}" filterBy="#{item.productCode}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListProductTitle_productCode}"/>
+                                <h:outputText value="#{bundle.ProductTitle_productCode}"/>
                             </f:facet>
                             <h:outputText value="#{item.productCode}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.manufacturerId}" filterBy="#{item.manufacturerId}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListProductTitle_manufacturerId}"/>
+                                <h:outputText value="#{bundle.ProductTitle_manufacturerId}"/>
                             </f:facet>
                             <h:outputText value="#{item.manufacturerId}"/>
                         </p:column>
                         <f:facet name="footer">
                             <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{productController.prepareCreate}" update="@form:@parent:ProductCreateForm" oncomplete="PF('ProductCreateDialog').show()"/>
-                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update="@form:@parent:ProductViewForm" oncomplete="PF('ProductViewDialog').show()" disabled="#{empty productController.selected}"/>
-                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update="@form:@parent:ProductEditForm" oncomplete="PF('ProductEditDialog').show()" disabled="#{empty productController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{productController.destroy}" update=":growl,datalist" disabled="#{empty productController.selected}"/>
+                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update="@form:@parent:ProductViewForm" oncomplete="PF('ProductViewDialog').show()" disabled="#{empty productController.selectedItems}"/>
+                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update="@form:@parent:ProductEditForm" oncomplete="PF('ProductEditDialog').show()" disabled="#{empty productController.selectedItems}"/>
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{productController.destroy}" update=":growl,datalist" disabled="#{empty productController.selectedItems}"/>
+                            <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                            <p:columnToggler datasource="datalist" trigger="toggler" />
                         </f:facet>
                     </p:dataTable>
                 </p:panel>
             </h:form>
-
             <ui:include src="Create.xhtml"/>
             <ui:include src="Edit.xhtml"/>
             <ui:include src="View.xhtml"/>
         </ui:define>
     </ui:composition>
-
 </html>

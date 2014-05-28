@@ -7,32 +7,53 @@
       xmlns:p="http://primefaces.org/ui">
 
     <ui:composition>
-
-        <p:dialog id="ProductViewDlg" widgetVar="ProductViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewProductTitle}">
+        <p:dialog id="ProductViewDlg" widgetVar="ProductViewDialog" modal="true" dynamic="true" fitViewport="true" minHeight="450" minWidth="600"   position="center"
+                  maximizable="true" minimizable="false" draggable="true" closable="true" resizable="true" appendTo="@(body)" closeOnEscape="true" showEffect="explode"
+                  onShow="fitViewport()" 
+                  header="#{bundle.ViewProductTitle}">
             <h:form id="ProductViewForm">
-                <h:panelGroup id="display">
-                    <p:panelGrid columns="4" rendered="#{productController.selected != null}">
-                        <h:outputText value="#{bundle.ViewProductLabel_productId}"/>
-                        <h:outputText value="#{productController.selected.productId}" title="#{bundle.ViewProductTitle_productId}"/>
-                        <h:outputText value="#{bundle.ViewProductLabel_purchaseCost}"/>
-                        <h:outputText value="#{productController.selected.purchaseCost}" title="#{bundle.ViewProductTitle_purchaseCost}"/>
-                        <h:outputText value="#{bundle.ViewProductLabel_quantityOnHand}"/>
-                        <h:outputText value="#{productController.selected.quantityOnHand}" title="#{bundle.ViewProductTitle_quantityOnHand}"/>
-                        <h:outputText value="#{bundle.ViewProductLabel_markup}"/>
-                        <h:outputText value="#{productController.selected.markup}" title="#{bundle.ViewProductTitle_markup}"/>
-                        <h:outputText value="#{bundle.ViewProductLabel_available}"/>
-                        <h:outputText value="#{productController.selected.available}" title="#{bundle.ViewProductTitle_available}"/>
-                        <h:outputText value="#{bundle.ViewProductLabel_description}"/>
-                        <h:outputText value="#{productController.selected.description}" title="#{bundle.ViewProductTitle_description}"/>
-                        <h:outputText value="#{bundle.ViewProductLabel_productCode}"/>
-                        <h:outputText value="#{productController.selected.productCode}" title="#{bundle.ViewProductTitle_productCode}"/>
-                        <h:outputText value="#{bundle.ViewProductLabel_manufacturerId}"/>
-                        <h:outputText value="#{productController.selected.manufacturerId}" title="#{bundle.ViewProductTitle_manufacturerId}"/>
-                    </p:panelGrid>
-                    <p:commandButton value="#{bundle.Close}" onclick="ProductViewDialog.hide()"/>
+                <h:panelGroup id="display" rendered="#{empty productController.selectedItems != null}">
+                    <ui:repeat  value="#{productController.selectedItems}" var="item">
+                        <p:panel toggleable="true" >
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ProductEntityLabel}"/>
+                                <h:outputText value="#{item.productId}" title="#{bundle.ProductEntityTitle}"/>
+                            </f:facet>
+                            <p:panelGrid columns="4" >
+                                <h:outputText value="#{bundle.ProductLabel_productId}"/>
+                                <h:outputText value="#{item.productId}" title="#{bundle.ProductTitle_productId}"/>
+                                <h:outputText value="#{bundle.ProductLabel_purchaseCost}"/>
+                                <h:outputText value="#{item.purchaseCost}" title="#{bundle.ProductTitle_purchaseCost}"/>
+                                <h:outputText value="#{bundle.ProductLabel_quantityOnHand}"/>
+                                <h:outputText value="#{item.quantityOnHand}" title="#{bundle.ProductTitle_quantityOnHand}"/>
+                                <h:outputText value="#{bundle.ProductLabel_markup}"/>
+                                <h:outputText value="#{item.markup}" title="#{bundle.ProductTitle_markup}"/>
+                                <h:outputText value="#{bundle.ProductLabel_available}"/>
+                                <h:outputText value="#{item.available}" title="#{bundle.ProductTitle_available}"/>
+                                <h:outputText value="#{bundle.ProductLabel_description}"/>
+                                <h:outputText value="#{item.description}" title="#{bundle.ProductTitle_description}"/>
+                                <h:outputText value="#{bundle.ProductLabel_productCode}"/>
+                                <h:outputText value="#{item.productCode}" title="#{bundle.ProductTitle_productCode}"/>
+                                <h:outputText value="#{bundle.ProductLabel_manufacturerId}"/>
+                                <h:outputText value="#{item.manufacturerId}" title="#{bundle.ProductTitle_manufacturerId}"/>
+                            </p:panelGrid>
+                        </p:panel>
+                    </ui:repeat>
+                    <p:commandButton type="button" value="#{bundle.Close}" onclick="PF('ProductViewDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
-
     </ui:composition>
+    <script type="text/javascript">
+
+        function fitViewport() {
+            var source = $('#ProductViewDlg');
+            var content = source.children('.ui-dialog-content');
+            source.height(Math.min($(window).height(), content.height() + 50));
+            content.height(Math.min($(window).height() - 50, content.height()));
+
+        }
+
+
+    </script>
 </html>

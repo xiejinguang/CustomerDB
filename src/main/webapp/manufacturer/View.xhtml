@@ -7,38 +7,59 @@
       xmlns:p="http://primefaces.org/ui">
 
     <ui:composition>
-
-        <p:dialog id="ManufacturerViewDlg" widgetVar="ManufacturerViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewManufacturerTitle}">
+        <p:dialog id="ManufacturerViewDlg" widgetVar="ManufacturerViewDialog" modal="true" dynamic="true" fitViewport="true" minHeight="450" minWidth="600"   position="center"
+                  maximizable="true" minimizable="false" draggable="true" closable="true" resizable="true" appendTo="@(body)" closeOnEscape="true" showEffect="explode"
+                  onShow="fitViewport()" 
+                  header="#{bundle.ViewManufacturerTitle}">
             <h:form id="ManufacturerViewForm">
-                <h:panelGroup id="display">
-                    <p:panelGrid columns="4" rendered="#{manufacturerController.selected != null}">
-                        <h:outputText value="#{bundle.ViewManufacturerLabel_manufacturerId}"/>
-                        <h:outputText value="#{manufacturerController.selected.manufacturerId}" title="#{bundle.ViewManufacturerTitle_manufacturerId}"/>
-                        <h:outputText value="#{bundle.ViewManufacturerLabel_name}"/>
-                        <h:outputText value="#{manufacturerController.selected.name}" title="#{bundle.ViewManufacturerTitle_name}"/>
-                        <h:outputText value="#{bundle.ViewManufacturerLabel_addressline1}"/>
-                        <h:outputText value="#{manufacturerController.selected.addressline1}" title="#{bundle.ViewManufacturerTitle_addressline1}"/>
-                        <h:outputText value="#{bundle.ViewManufacturerLabel_addressline2}"/>
-                        <h:outputText value="#{manufacturerController.selected.addressline2}" title="#{bundle.ViewManufacturerTitle_addressline2}"/>
-                        <h:outputText value="#{bundle.ViewManufacturerLabel_city}"/>
-                        <h:outputText value="#{manufacturerController.selected.city}" title="#{bundle.ViewManufacturerTitle_city}"/>
-                        <h:outputText value="#{bundle.ViewManufacturerLabel_state}"/>
-                        <h:outputText value="#{manufacturerController.selected.state}" title="#{bundle.ViewManufacturerTitle_state}"/>
-                        <h:outputText value="#{bundle.ViewManufacturerLabel_zip}"/>
-                        <h:outputText value="#{manufacturerController.selected.zip}" title="#{bundle.ViewManufacturerTitle_zip}"/>
-                        <h:outputText value="#{bundle.ViewManufacturerLabel_phone}"/>
-                        <h:outputText value="#{manufacturerController.selected.phone}" title="#{bundle.ViewManufacturerTitle_phone}"/>
-                        <h:outputText value="#{bundle.ViewManufacturerLabel_fax}"/>
-                        <h:outputText value="#{manufacturerController.selected.fax}" title="#{bundle.ViewManufacturerTitle_fax}"/>
-                        <h:outputText value="#{bundle.ViewManufacturerLabel_email}"/>
-                        <h:outputText value="#{manufacturerController.selected.email}" title="#{bundle.ViewManufacturerTitle_email}"/>
-                        <h:outputText value="#{bundle.ViewManufacturerLabel_rep}"/>
-                        <h:outputText value="#{manufacturerController.selected.rep}" title="#{bundle.ViewManufacturerTitle_rep}"/>
-                    </p:panelGrid>
-                    <p:commandButton value="#{bundle.Close}" onclick="ManufacturerViewDialog.hide()"/>
+                <h:panelGroup id="display" rendered="#{empty manufacturerController.selectedItems != null}">
+                    <ui:repeat  value="#{manufacturerController.selectedItems}" var="item">
+                        <p:panel toggleable="true" >
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ManufacturerEntityLabel}"/>
+                                <h:outputText value="#{item.manufacturerId}" title="#{bundle.ManufacturerEntityTitle}"/>
+                            </f:facet>
+                            <p:panelGrid columns="4" >
+                                <h:outputText value="#{bundle.ManufacturerLabel_manufacturerId}"/>
+                                <h:outputText value="#{item.manufacturerId}" title="#{bundle.ManufacturerTitle_manufacturerId}"/>
+                                <h:outputText value="#{bundle.ManufacturerLabel_name}"/>
+                                <h:outputText value="#{item.name}" title="#{bundle.ManufacturerTitle_name}"/>
+                                <h:outputText value="#{bundle.ManufacturerLabel_addressline1}"/>
+                                <h:outputText value="#{item.addressline1}" title="#{bundle.ManufacturerTitle_addressline1}"/>
+                                <h:outputText value="#{bundle.ManufacturerLabel_addressline2}"/>
+                                <h:outputText value="#{item.addressline2}" title="#{bundle.ManufacturerTitle_addressline2}"/>
+                                <h:outputText value="#{bundle.ManufacturerLabel_city}"/>
+                                <h:outputText value="#{item.city}" title="#{bundle.ManufacturerTitle_city}"/>
+                                <h:outputText value="#{bundle.ManufacturerLabel_state}"/>
+                                <h:outputText value="#{item.state}" title="#{bundle.ManufacturerTitle_state}"/>
+                                <h:outputText value="#{bundle.ManufacturerLabel_zip}"/>
+                                <h:outputText value="#{item.zip}" title="#{bundle.ManufacturerTitle_zip}"/>
+                                <h:outputText value="#{bundle.ManufacturerLabel_phone}"/>
+                                <h:outputText value="#{item.phone}" title="#{bundle.ManufacturerTitle_phone}"/>
+                                <h:outputText value="#{bundle.ManufacturerLabel_fax}"/>
+                                <h:outputText value="#{item.fax}" title="#{bundle.ManufacturerTitle_fax}"/>
+                                <h:outputText value="#{bundle.ManufacturerLabel_email}"/>
+                                <h:outputText value="#{item.email}" title="#{bundle.ManufacturerTitle_email}"/>
+                                <h:outputText value="#{bundle.ManufacturerLabel_rep}"/>
+                                <h:outputText value="#{item.rep}" title="#{bundle.ManufacturerTitle_rep}"/>
+                            </p:panelGrid>
+                        </p:panel>
+                    </ui:repeat>
+                    <p:commandButton type="button" value="#{bundle.Close}" onclick="PF('ManufacturerViewDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
-
     </ui:composition>
+    <script type="text/javascript">
+
+        function fitViewport() {
+            var source = $('#ManufacturerViewDlg');
+            var content = source.children('.ui-dialog-content');
+            source.height(Math.min($(window).height(), content.height() + 50));
+            content.height(Math.min($(window).height() - 50, content.height()));
+
+        }
+
+
+    </script>
 </html>

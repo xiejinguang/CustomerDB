@@ -10,25 +10,37 @@
       xmlns:p="http://primefaces.org/ui">
 
     <ui:composition>
-
-        <p:dialog id="ProductCodeCreateDlg" widgetVar="ProductCodeCreateDialog" modal="true" dynamic="true"
-                  minimizable="true" draggable="true" closable="true" resizable="false" appendTo="@(body)"
+        <p:dialog id="ProductCodeCreateDlg" widgetVar="ProductCodeCreateDialog" modal="true" dynamic="true" fitViewport="true" minHeight="450" minWidth="600"   position="center"
+                  maximizable="true" minimizable="false" draggable="true" closable="true" resizable="true" appendTo="@(body)" closeOnEscape="true" showEffect="explode"
+                  onShow="fitViewport()" 
                   header="#{bundle.CreateProductCodeTitle}">
             <h:form id="ProductCodeCreateForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{productCodeController.selected != null}">
+                    <p:panelGrid columns="2" rendered="#{productCodeController.created != null}">
                         <p:outputLabel value="#{bundle.CreateProductCodeLabel_prodCode}" for="prodCode" />
-                        <p:inputText id="prodCode" value="#{productCodeController.selected.prodCode}" title="#{bundle.CreateProductCodeTitle_prodCode}" required="true" requiredMessage="#{bundle.CreateProductCodeRequiredMessage_prodCode}"/>
+                        <p:inputText id="prodCode" value="#{productCodeController.created.prodCode}" title="#{bundle.CreateProductCodeTitle_prodCode}" required="true" requiredMessage="#{bundle.CreateProductCodeRequiredMessage_prodCode}"/>
                         <p:outputLabel value="#{bundle.CreateProductCodeLabel_discountCode}" for="discountCode" />
-                        <p:inputText id="discountCode" value="#{productCodeController.selected.discountCode}" title="#{bundle.CreateProductCodeTitle_discountCode}" required="true" requiredMessage="#{bundle.CreateProductCodeRequiredMessage_discountCode}"/>
+                        <p:inputText id="discountCode" value="#{productCodeController.created.discountCode}" title="#{bundle.CreateProductCodeTitle_discountCode}" required="true" requiredMessage="#{bundle.CreateProductCodeRequiredMessage_discountCode}"/>
                         <p:outputLabel value="#{bundle.CreateProductCodeLabel_description}" for="description" />
-                        <p:inputText id="description" value="#{productCodeController.selected.description}" title="#{bundle.CreateProductCodeTitle_description}" />
+                        <p:inputText id="description" value="#{productCodeController.created.description}" title="#{bundle.CreateProductCodeTitle_description}" />
                     </p:panelGrid>
                     <p:commandButton actionListener="#{productCodeController.create}" value="#{bundle.Save}" update="display,@form:@parent:ProductCodeListForm:datalist,:growl" oncomplete="handleSubmit(args,'ProductCodeCreateDialog');"/>
-                    <p:commandButton type="button" value="#{bundle.Cancel}" onclick="ProductCodeCreateDialog.hide()"/>
+                    <p:commandButton type="button" value="#{bundle.Cancel}" onclick="PF('ProductCodeCreateDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
 
     </ui:composition>
+    <script type="text/javascript">
+
+        function fitViewport() {
+            var source = $('#ProductCodeCreateDlg');
+            var content = source.children('.ui-dialog-content');
+            source.height(Math.min($(window).height(), content.height() + 50));
+            content.height(Math.min($(window).height() - 50, content.height()));
+
+        }
+
+
+    </script>
 </html>

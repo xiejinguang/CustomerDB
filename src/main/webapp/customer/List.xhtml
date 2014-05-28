@@ -19,107 +19,183 @@
         <ui:define name="body">
             <h:form id="CustomerListForm">
                 <p:panel header="#{bundle.ListCustomerTitle}">
+                    <p:fieldset id="searchField" legend="${bundle.SearchConsTitle}" toggleable="true" toggleSpeed="500" >
+                        <p:panelGrid   style="width:100%"  >
+                            <p:row>
+                                <p:column >
+                                    <p:panelGrid id="searchConsGrid" columns="4">
+
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.CustomerLabel_customerId}" for="customerId" />
+                                            <p:inputText id="customerId" value="#{customerController.searchCons['customerId']}" title="#{bundle.CustomerTitle_customerId}"  converter="javax.faces.Integer"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.CustomerLabel_name}" for="name" />
+                                            <p:inputText id="name" value="#{customerController.searchCons['name']}" title="#{bundle.CustomerTitle_name}"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.CustomerLabel_addressline1}" for="addressline1" />
+                                            <p:inputText id="addressline1" value="#{customerController.searchCons['addressline1']}" title="#{bundle.CustomerTitle_addressline1}"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.CustomerLabel_addressline2}" for="addressline2" />
+                                            <p:inputText id="addressline2" value="#{customerController.searchCons['addressline2']}" title="#{bundle.CustomerTitle_addressline2}"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.CustomerLabel_city}" for="city" />
+                                            <p:inputText id="city" value="#{customerController.searchCons['city']}" title="#{bundle.CustomerTitle_city}"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.CustomerLabel_state}" for="state" />
+                                            <p:inputText id="state" value="#{customerController.searchCons['state']}" title="#{bundle.CustomerTitle_state}"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.CustomerLabel_phone}" for="phone" />
+                                            <p:inputText id="phone" value="#{customerController.searchCons['phone']}" title="#{bundle.CustomerTitle_phone}"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.CustomerLabel_fax}" for="fax" />
+                                            <p:inputText id="fax" value="#{customerController.searchCons['fax']}" title="#{bundle.CustomerTitle_fax}"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.CustomerLabel_email}" for="email" />
+                                            <p:inputText id="email" value="#{customerController.searchCons['email']}" title="#{bundle.CustomerTitle_email}"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.CustomerLabel_creditLimit}" for="creditLimit" />
+                                            <p:inputText id="creditLimit" value="#{customerController.searchCons['creditLimit']}" title="#{bundle.CustomerTitle_creditLimit}"  converter="javax.faces.Integer"  />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.CustomerLabel_zip}" for="zip" />
+                                            <p:selectOneMenu id="zip" value="#{customerController.searchCons['zip']}" >
+                                                <f:selectItems value="#{microMarketController.itemsAvailableSelectOne}"
+                                                               var="zipItem"
+                                                               itemValue="#{zipItem}"/>
+                                            </p:selectOneMenu>
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{bundle.CustomerLabel_discountCode}" for="discountCode" />
+                                            <p:selectOneMenu id="discountCode" value="#{customerController.searchCons['discountCode']}" >
+                                                <f:selectItems value="#{discountCodeController.itemsAvailableSelectOne}"
+                                                               var="discountCodeItem"
+                                                               itemValue="#{discountCodeItem}"/>
+                                            </p:selectOneMenu>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton id="searchButton" icon="ui-icon-search"   value="${bundle.Search}" actionListener="#{customerController.searchItems}" update=":growl,datalist"/>
+                                    <br/>
+                                    <p:commandButton id="searchAllButton" icon="ui-icon-search"   value="${bundle.SearchAll}" actionListener="#{customerController.allItems}" update=":growl,datalist"/>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>                   
+                    </p:fieldset>
+
                     <p:dataTable id="datalist" value="#{customerController.items}" var="item"
-                                 selectionMode="single" selection="#{customerController.selected}"
+                                 selection="#{customerController.selectedItems}"
                                  rowKey="#{item.customerId}"
                                  rowsPerPageTemplate="10,20,30,40,50"
                                  paginator="true" paginatorPosition="bottom"
-                                 rows="10" lazy="true" 
+                                 rows="10" 
                                  draggableColumns="true" resizableColumns="true" 
                                  scrollable="true"   liveResize="true" liveScroll="true"
                                  sortMode="multiple"
-                                 editable="true"                               
+                                 editable="true" 
+                                 stickyHeader="false" 
                                  >
 
                         <p:ajax event="rowSelect"   update="createButton,viewButton,editButton,deleteButton"/>
                         <p:ajax event="rowUnselect" update="createButton,viewButton editButton,deleteButton"/>
 
-                        <p:column>
+                        <p:column selectionMode="multiple" style="width:15px;text-align:center" toggleable="false"/>  
+
+                        <p:column sortBy="#{item.customerId}" filterBy="#{item.customerId}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListCustomerTitle_customerId}"/>
+                                <h:outputText value="#{bundle.CustomerTitle_customerId}"/>
                             </f:facet>
                             <h:outputText value="#{item.customerId}"/>
                         </p:column>
-                        <p:column sortBy="name" filterBy="name">
+                        <p:column sortBy="#{item.name}" filterBy="#{item.name}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListCustomerTitle_name}"/>
+                                <h:outputText value="#{bundle.CustomerTitle_name}"/>
                             </f:facet>
                             <h:outputText value="#{item.name}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.addressline1}" filterBy="#{item.addressline1}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListCustomerTitle_addressline1}"/>
+                                <h:outputText value="#{bundle.CustomerTitle_addressline1}"/>
                             </f:facet>
                             <h:outputText value="#{item.addressline1}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.addressline2}" filterBy="#{item.addressline2}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListCustomerTitle_addressline2}"/>
+                                <h:outputText value="#{bundle.CustomerTitle_addressline2}"/>
                             </f:facet>
                             <h:outputText value="#{item.addressline2}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.city}" filterBy="#{item.city}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListCustomerTitle_city}"/>
+                                <h:outputText value="#{bundle.CustomerTitle_city}"/>
                             </f:facet>
                             <h:outputText value="#{item.city}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.state}" filterBy="#{item.state}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListCustomerTitle_state}"/>
+                                <h:outputText value="#{bundle.CustomerTitle_state}"/>
                             </f:facet>
                             <h:outputText value="#{item.state}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.phone}" filterBy="#{item.phone}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListCustomerTitle_phone}"/>
+                                <h:outputText value="#{bundle.CustomerTitle_phone}"/>
                             </f:facet>
                             <h:outputText value="#{item.phone}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.fax}" filterBy="#{item.fax}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListCustomerTitle_fax}"/>
+                                <h:outputText value="#{bundle.CustomerTitle_fax}"/>
                             </f:facet>
                             <h:outputText value="#{item.fax}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.email}" filterBy="#{item.email}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListCustomerTitle_email}"/>
+                                <h:outputText value="#{bundle.CustomerTitle_email}"/>
                             </f:facet>
                             <h:outputText value="#{item.email}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.creditLimit}" filterBy="#{item.creditLimit}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListCustomerTitle_creditLimit}"/>
+                                <h:outputText value="#{bundle.CustomerTitle_creditLimit}"/>
                             </f:facet>
                             <h:outputText value="#{item.creditLimit}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.zip}" filterBy="#{item.zip}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListCustomerTitle_zip}"/>
+                                <h:outputText value="#{bundle.CustomerTitle_zip}"/>
                             </f:facet>
                             <h:outputText value="#{item.zip}"/>
                         </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.discountCode}" filterBy="#{item.discountCode}">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListCustomerTitle_discountCode}"/>
+                                <h:outputText value="#{bundle.CustomerTitle_discountCode}"/>
                             </f:facet>
                             <h:outputText value="#{item.discountCode}"/>
                         </p:column>
                         <f:facet name="footer">
                             <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{customerController.prepareCreate}" update="@form:@parent:CustomerCreateForm" oncomplete="PF('CustomerCreateDialog').show()"/>
-                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update="@form:@parent:CustomerViewForm" oncomplete="PF('CustomerViewDialog').show()" disabled="#{empty customerController.selected}"/>
-                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update="@form:@parent:CustomerEditForm" oncomplete="PF('CustomerEditDialog').show()" disabled="#{empty customerController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{customerController.destroy}" update=":growl,datalist" disabled="#{empty customerController.selected}"/>
+                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update="@form:@parent:CustomerViewForm" oncomplete="PF('CustomerViewDialog').show()" disabled="#{empty customerController.selectedItems}"/>
+                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update="@form:@parent:CustomerEditForm" oncomplete="PF('CustomerEditDialog').show()" disabled="#{empty customerController.selectedItems}"/>
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{customerController.destroy}" update=":growl,datalist" disabled="#{empty customerController.selectedItems}"/>
+                            <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                            <p:columnToggler datasource="datalist" trigger="toggler" />
                         </f:facet>
                     </p:dataTable>
                 </p:panel>
             </h:form>
-
             <ui:include src="Create.xhtml"/>
             <ui:include src="Edit.xhtml"/>
             <ui:include src="View.xhtml"/>
         </ui:define>
     </ui:composition>
-
 </html>

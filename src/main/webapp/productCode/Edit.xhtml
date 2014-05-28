@@ -10,25 +10,45 @@
       xmlns:p="http://primefaces.org/ui">
 
     <ui:composition>
-
-        <p:dialog id="ProductCodeEditDlg" widgetVar="ProductCodeEditDialog" modal="true" dynamic="true"
-                  minimizable="true" draggable="true" closable="true" resizable="false" appendTo="@(body)"
+        <p:dialog id="ProductCodeEditDlg" widgetVar="ProductCodeEditDialog" modal="true" dynamic="true" fitViewport="true" minHeight="450" minWidth="600"   position="center"
+                  maximizable="true" minimizable="false" draggable="true" closable="true" resizable="true" appendTo="@(body)" closeOnEscape="true" showEffect="explode"
+                  onShow="fitViewport()" 
                   header="#{bundle.EditProductCodeTitle}">
             <h:form id="ProductCodeEditForm">
-                <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{productCodeController.selected != null}">
-                        <p:outputLabel value="#{bundle.EditProductCodeLabel_prodCode}" for="prodCode" />
-                        <p:inputText id="prodCode" value="#{productCodeController.selected.prodCode}" title="#{bundle.EditProductCodeTitle_prodCode}" required="true" requiredMessage="#{bundle.EditProductCodeRequiredMessage_prodCode}"/>
-                        <p:outputLabel value="#{bundle.EditProductCodeLabel_discountCode}" for="discountCode" />
-                        <p:inputText id="discountCode" value="#{productCodeController.selected.discountCode}" title="#{bundle.EditProductCodeTitle_discountCode}" required="true" requiredMessage="#{bundle.EditProductCodeRequiredMessage_discountCode}"/>
-                        <p:outputLabel value="#{bundle.EditProductCodeLabel_description}" for="description" />
-                        <p:inputText id="description" value="#{productCodeController.selected.description}" title="#{bundle.EditProductCodeTitle_description}" />
-                    </p:panelGrid>
-                    <p:commandButton actionListener="#{productCodeController.Edit}" value="#{bundle.Save}" update="display,@form:@parent:ProductCodeListForm:datalist,:growl" oncomplete="handleSubmit(args,'ProductCodeEditDialog');"/>
-                    <p:commandButton type="button" value="#{bundle.Cancel}" onclick="ProductCodeEditDialog.hide()"/>
+                <h:panelGroup id="display" rendered="#{empty productCodeController.selectedItems != null}">
+                    <ui:repeat  value="#{productCodeController.selectedItems}" var="item">
+                        <p:panel toggleable="true" >
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ProductCodeEntityLabel}"/>
+                                <h:outputText value="#{item.prodCode}" title="#{bundle.ProductCodeEntityTitle}"/>
+                            </f:facet>
+                            <p:panelGrid columns="2" >
+                                <p:outputLabel value="#{bundle.EditProductCodeLabel_prodCode}" for="prodCode" />
+                                <p:inputText id="prodCode" value="#{item.prodCode}" title="#{bundle.EditProductCodeTitle_prodCode}" required="true" requiredMessage="#{bundle.EditProductCodeRequiredMessage_prodCode}"/>
+                                <p:outputLabel value="#{bundle.EditProductCodeLabel_discountCode}" for="discountCode" />
+                                <p:inputText id="discountCode" value="#{item.discountCode}" title="#{bundle.EditProductCodeTitle_discountCode}" required="true" requiredMessage="#{bundle.EditProductCodeRequiredMessage_discountCode}"/>
+                                <p:outputLabel value="#{bundle.EditProductCodeLabel_description}" for="description" />
+                                <p:inputText id="description" value="#{item.description}" title="#{bundle.EditProductCodeTitle_description}" />
+                            </p:panelGrid>
+                        </p:panel>
+                    </ui:repeat>
+                    <p:commandButton actionListener="#{productCodeController.update}" value="#{bundle.Save}" update="display,@form:@parent:ProductCodeListForm:datalist,:growl" oncomplete="handleSubmit(args,'ProductCodeEditDialog');"/>
+                    <p:commandButton type="button" value="#{bundle.Cancel}" onclick="PF('ProductCodeEditDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
 
     </ui:composition>
+    <script type="text/javascript">
+
+        function fitViewport() {
+            var source = $('#ProductCodeEditDlg');
+            var content = source.children('.ui-dialog-content');
+            source.height(Math.min($(window).height(), content.height() + 50));
+            content.height(Math.min($(window).height() - 50, content.height()));
+
+        }
+
+
+    </script>
 </html>
