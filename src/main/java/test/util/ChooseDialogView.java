@@ -38,8 +38,11 @@ public class ChooseDialogView {
         options.put("modal", true);
         options.put("draggable", true);
         options.put("resizable", true);
-        options.put("height", 400);
-        options.put("width", 600);
+        options.put("height", 450);
+        options.put("width", 650);
+        options.put("contentMinWidth ", 600);
+        options.put("contentMinHeight", 400);
+                
         RequestContext.getCurrentInstance().openDialog(outcome,options,null);
     }
 

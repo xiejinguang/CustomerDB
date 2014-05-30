@@ -79,7 +79,7 @@
         <br />
         <h:link outcome="/purchaseOrder/List" value="Show All PurchaseOrder Items"/>
         <p:dialog dynamic="false" widgetVar="dlg" appendTo="@(body)"  maximizable="true" closable="true" modal="true" minWidth="450" minHeight="350"  >
-            <iframe id="testFrame" src="#{request.servletContext.contextPath}/index.jsf"  frameborder="0"  scrolling="auto" marginheight="0" marginwidth="0"  width="100%"  style="min-width:600px" onload="autoFitDocSize(this)"/>
+            <iframe id="testFrame" src="#{request.servletContext.contextPath}/index.jsf"  frameborder="0"  scrolling="no" marginheight="0" marginwidth="0"  width="100%"  style="min-width:600px" onload="autoFitDocSize(this)"/>
         </p:dialog> 
       <script>
         /*    (function(a){if(a.My){return};a.My={};a.My.show = function(){ a.My.my};}(window));

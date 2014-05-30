@@ -3,7 +3,7 @@ function autoFitDocSize(iframe) {
     $(iframe).height(doc.height());
     doc.on("DOMSubtreeModified", function(e) {
         $(iframe).height(doc.height());
-        alert("you see it");
+        //alert("you see it");
     });
 }
 
@@ -26,10 +26,21 @@ PrimeFaces.dialog.DialogHandler = {openDialog: function(e) {
         if (e.options.closable !== false) {
             f.children(".ui-dialog-titlebar").append('<a class="ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all" href="#" role="button"><span class="ui-icon ui-icon-closethick"></span></a>')
         }
-        f.append('<div class="ui-dialog-content ui-widget-content"><iframe frameborder="0" scrolling="no"  width="100%" style="min-width:600px"  onload="autoFitDocSize(this)" /></div>');
+        f.append('<div class="ui-dialog-content ui-widget-content"><iframe frameborder="0" scrolling="no"  width="100%"  onload="autoFitDocSize(this)" /></div>');
         f.appendTo(document.body);
         var c = f.find("iframe"), g = e.url.indexOf("?") === -1 ? "?" : "&", b = e.url + g + "pfdlgcid=" + e.pfdlgcid, a = e.options.contentWidth || 640;
         //c.width(a);
+        var contentCSS ={};
+        if(e.options.contentMinWidth ){
+           contentCSS.minWidth = e.options.contentMinWidth ;
+        }
+        if(e.options.contentMinHeight ){
+            contentCSS.minHeight = e.options.contentMinHeight ;
+        }
+//       // contentCSS.width = "100%";
+        c.css(contentCSS);
+        
+        
         c.on("load", function() {
             var j = $(this), k = j.contents().find("title");
             if (!j.data("initialized")) {
